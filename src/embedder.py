@@ -33,14 +33,14 @@ def embed_images(image_paths, model, preprocess, device):
 
     for path in image_paths:
         try:
-            image = preprocess(Image.open(path).conver("RGB")).unsqueeze(0).to(device)
+            image = preprocess(Image.open(path).convert("RGB")).unsqueeze(0).to(device)
             with torch.no_grad():
                 embedding = model.encode_image(image)
                 embedding = embedding / embedding.norm(dim=-1, keepdim=True)
                 embeddings.append(embedding.cpu().numpy())
                 valid_paths.append(str(path))
         except Exception as e:
-            print(f"skipping {path_name}: {e}")
+            print(f"skipping {path.name}: {e}")
     return np.vstack(embeddings), valid_paths
 
 # save embeddings
@@ -54,7 +54,7 @@ def save_embeddings(embeddings, image_paths, output_dir: str, handle: str):
     print(f"saved {len(image_paths)} embeddings to {output_path}")
 
 # main
-if __name__ = "__main__":
+if __name__ == "__main__":
     device = get_device()
     print(f"using device: {device}")
 
@@ -65,4 +65,4 @@ if __name__ = "__main__":
     print(f"found {len(image_paths)} images")
 
     embeddings, valid_paths = embed_images(image_paths, model, preprocess, device)
-    save_embeddings(embeddings, valid_paths, "data/embeddings", "jessica/")
+    save_embeddings(embeddings, valid_paths, "data/embeddings", "jessica")
